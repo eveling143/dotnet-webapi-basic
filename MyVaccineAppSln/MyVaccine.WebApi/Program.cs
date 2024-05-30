@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MyVaccine.WebApi.Configurations;
+using MyVaccine.WebApi.Literals;
 using MyVaccine.WebApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +11,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<MyVaccineAppDbContext>(options =>
-    options.UseSqlServer("Server=localhost,38792;Database=MyVaccineAppDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"/*Environment.GetEnvironmentVariable("MyVaccineDbConnectionString"))*/));
+builder.Services.SetDatabaseConfiguration();
+builder.Services.SetMyVaccineAuthConfiguration();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +25,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
